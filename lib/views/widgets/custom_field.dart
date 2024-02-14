@@ -6,6 +6,7 @@ class CustomTextField extends StatelessWidget {
   final bool hideText;
   final IconData? icon;
   final bool isPassword;
+  final TextStyle hintStyle;
 
   const CustomTextField({
     super.key,
@@ -14,6 +15,7 @@ class CustomTextField extends StatelessWidget {
     this.icon,
     this.hideText = false,
     this.isPassword = false,
+    this.hintStyle = const TextStyle(color: Colors.white),
   });
   @override
   Widget build(BuildContext context) {
@@ -26,7 +28,7 @@ class CustomTextField extends StatelessWidget {
           hintText: hintMessage,
           prefixIcon: Icon(icon),
           prefixIconColor: Colors.white,
-          hintStyle: const TextStyle(color: Colors.white),
+          hintStyle: hintStyle,
         ),
         keyboardType: TextInputType.emailAddress,
         textInputAction: TextInputAction.next,

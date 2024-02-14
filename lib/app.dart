@@ -36,33 +36,30 @@ class _AppState extends State<App> {
       screenWidget = LoginScreen(switchScreen);
     }
 
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        body: ShaderMask(
-          shaderCallback: (bounds) => const LinearGradient(
-            colors: [appBlackColor, Colors.black12],
-            begin: Alignment.bottomCenter,
-            end: Alignment.center,
-          ).createShader(bounds),
-          blendMode: BlendMode.darken,
-          child: Container(
-            width: double.infinity,
-            height: double.infinity,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage(
-                  'assets/images/grains.png',
-                ),
-                fit: BoxFit.cover,
-                colorFilter: ColorFilter.mode(
-                  Colors.black45,
-                  BlendMode.darken,
-                ),
+    return Scaffold(
+      body: ShaderMask(
+        shaderCallback: (bounds) => const LinearGradient(
+          colors: [appBlackColor, Colors.black12],
+          begin: Alignment.bottomCenter,
+          end: Alignment.center,
+        ).createShader(bounds),
+        blendMode: BlendMode.darken,
+        child: Container(
+          width: double.infinity,
+          height: double.infinity,
+          decoration: const BoxDecoration(
+            image: DecorationImage(
+              image: AssetImage(
+                'assets/images/grains.png',
+              ),
+              fit: BoxFit.cover,
+              colorFilter: ColorFilter.mode(
+                Colors.black45,
+                BlendMode.darken,
               ),
             ),
-            child: Center(child: screenWidget),
           ),
+          child: Center(child: screenWidget),
         ),
       ),
     );
