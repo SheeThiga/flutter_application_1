@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/constants.dart';
 import 'package:flutter_application_1/views/widgets/custom_button.dart';
 import 'package:flutter_application_1/views/widgets/custom_field.dart';
+import 'package:get/get.dart';
 import '../widgets/custom_text.dart';
 
-class RegistrationScreen extends StatelessWidget {
-  final void Function() logIn;
-
-  const RegistrationScreen(this.logIn, {super.key});
+class RegistrationScreen extends GetView {
+  const RegistrationScreen({super.key});
 
   @override
   Widget build(context) {
@@ -43,13 +42,13 @@ class RegistrationScreen extends StatelessWidget {
                     border: Border(
                   bottom: BorderSide(color: Colors.limeAccent, width: 1),
                 )),
-                child: InkWell(
-                  onTap: logIn,
-                  child: const CustomText(
-                    label: 'Already have an account? sign in',
-                    labelColor: Colors.limeAccent,
-                  ),
+                // child: InkWell(
+                //   onTap: () => Get.toNamed("/login"),
+                child: const CustomText(
+                  label: 'Already have an account? sign in',
+                  labelColor: Colors.limeAccent,
                 ),
+                // ),
               ),
               const SizedBox(
                 height: 50.0,
@@ -123,9 +122,10 @@ class RegistrationScreen extends StatelessWidget {
               const SizedBox(
                 height: 10.0,
               ),
-              const CustomButton(
+              CustomButton(
                 label: 'Create Account ',
                 buttonColor: Colors.lime,
+                action: () => Get.toNamed("/login"),
               )
             ],
           ),

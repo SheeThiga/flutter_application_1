@@ -9,11 +9,10 @@ class Calculator extends StatelessWidget {
   final TextEditingController num2controller = TextEditingController();
   final CalculatorController calculatorController =
       Get.put(CalculatorController());
-     
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(      
-        body: Container(
+    return Container(
       padding: const EdgeInsets.all(20),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -33,9 +32,9 @@ class Calculator extends StatelessWidget {
             onPressed: () {
               double a = double.parse(num1controller.text);
               double b = double.parse(num2controller.text);
-              
+
               double s = a + b;
-              calculatorController.updateSum(a,b,s);
+              calculatorController.updateSum(a, b, s);
             },
             child: const Text("calculate"),
           ),
@@ -49,6 +48,6 @@ class Calculator extends StatelessWidget {
           ),
         ],
       ),
-    ));
+    );
   }
 }
