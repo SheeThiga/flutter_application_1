@@ -4,11 +4,13 @@ import 'package:flutter_application_1/views/widgets/custom_field.dart';
 import 'package:flutter_application_1/views/widgets/custom_text.dart';
 import 'package:get/get.dart';
 
+final TextEditingController num1controller = TextEditingController();
+final TextEditingController num2controller = TextEditingController();
+final CalculatorController calculatorController =
+    Get.put(CalculatorController());
+
 class Calculator extends StatelessWidget {
-  final TextEditingController num1controller = TextEditingController();
-  final TextEditingController num2controller = TextEditingController();
-  final CalculatorController calculatorController =
-      Get.put(CalculatorController());
+  const Calculator({super.key});
 
   @override
   Widget build(BuildContext context) {

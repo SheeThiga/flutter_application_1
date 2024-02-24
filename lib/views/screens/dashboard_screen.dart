@@ -1,23 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/configs/constants.dart';
-import 'package:flutter_application_1/views/widgets/custom_text.dart';
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const CustomText(
-          label: 'Cereal Shop Dashboard',
-          fontWeight: FontWeight.bold,
-          labelColor: appBlackColor,
-        ),
-        backgroundColor: Colors.lime, 
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
+      body: Container(
+        padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -81,14 +70,9 @@ class DashboardScreen extends StatelessWidget {
                       value: 'Tuesday',
                       child: Text('Tuesday'),
                     ),
-                    
                   ],
-                  onChanged: (value) {
-                    
-                  },
+                  onChanged: (value) {},
                   hint: const Text('Select Day'),
-                  
-
                 ),
               ],
             ),
@@ -104,16 +88,12 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                   child: const Text('Bank Card'),
                 ),
                 const SizedBox(height: 10),
                 ElevatedButton(
-                  onPressed: () {
-                    
-                  },
+                  onPressed: () {},
                   child: const Text('Cash'),
                 ),
                 const SizedBox(height: 10),
@@ -125,11 +105,6 @@ class DashboardScreen extends StatelessWidget {
             ),
           ],
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: Colors.lime,
-        child: const Icon(Icons.add), 
       ),
     );
   }

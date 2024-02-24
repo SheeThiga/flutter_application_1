@@ -12,7 +12,7 @@ class Routes {
     GetPage(name: "/login",page: () => const LoginScreen()),
     GetPage(name: "/home", page: () => const Home()), 
     GetPage(name: "/dashboard", page: () => const DashboardScreen()),
-    GetPage(name: "/calculator",page: () => Calculator()),
+    GetPage(name: "/calculator",page: () => const Calculator()),
     GetPage(name: "/registration", page: () => const RegistrationScreen()),
    
   ];
