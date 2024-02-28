@@ -1,15 +1,17 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/configs/constants.dart';
 import 'package:flutter_application_1/controllers/home_controller.dart';
-import 'package:flutter_application_1/views/calculator.dart';
 import 'package:flutter_application_1/views/screens/dashboard_screen.dart';
+import 'package:flutter_application_1/views/screens/profile.dart';
+import 'package:flutter_application_1/views/screens/settings.dart';
 import 'package:get/get.dart';
 
 HomeController homeController = Get.put(HomeController());
 var screens = [
   const DashboardScreen(),
-  const Calculator(),
-  const Calculator(),
+  const ProfileScreen(),
+  const SettingScreen(),
 ];
 
 class Home extends StatelessWidget {
@@ -18,12 +20,9 @@ class Home extends StatelessWidget {
   @override
   Widget build(context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Cereal Shop'),
-      ),
       bottomNavigationBar: CurvedNavigationBar(
-          backgroundColor: Colors.white,
-          color: Colors.lime,
+          backgroundColor: appWhiteColor,
+          color: primaryColor,
           items: const [
             Icon(Icons.home),
             Icon(Icons.person),

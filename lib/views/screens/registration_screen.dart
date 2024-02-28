@@ -118,7 +118,7 @@ class RegistrationScreen extends GetView {
                 ),
                 CustomButton(
                   label: 'Create Account ',
-                  buttonColor: Colors.lime,
+                  buttonColor: primaryColor,
                   action: () => Get.toNamed("/login"),
                 )
               ],

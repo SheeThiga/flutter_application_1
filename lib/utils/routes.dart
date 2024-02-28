@@ -3,7 +3,9 @@ import 'package:flutter_application_1/views/calculator.dart';
 import 'package:flutter_application_1/views/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/views/screens/home.dart';
 import 'package:flutter_application_1/views/screens/login_screen.dart';
+import 'package:flutter_application_1/views/screens/profile.dart';
 import 'package:flutter_application_1/views/screens/registration_screen.dart';
+import 'package:flutter_application_1/views/screens/settings.dart';
 import 'package:get/get.dart';
 
 class Routes {
@@ -14,6 +16,8 @@ class Routes {
     GetPage(name: "/dashboard", page: () => const DashboardScreen()),
     GetPage(name: "/calculator",page: () => const Calculator()),
     GetPage(name: "/registration", page: () => const RegistrationScreen()),
+    GetPage(name: "/profile", page: () => const ProfileScreen()),
+    GetPage(name: "/setting", page: () => const SettingScreen()),
    
   ];
 }
