@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/utils/routes.dart';
-//import 'package:flutter_application_1/views/calculator.dart';
-//import 'package:flutter_application_1/views/screens/dashboard_screen.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 
 void main() {
