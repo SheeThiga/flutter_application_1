@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/constants.dart';
 import 'package:flutter_application_1/views/widgets/back_ground.dart';
@@ -5,18 +6,18 @@ import 'package:flutter_application_1/views/widgets/custom_button.dart';
 import 'package:flutter_application_1/views/widgets/custom_field.dart';
 import 'package:get/get.dart';
 import '../widgets/custom_text.dart';
+import 'package:http/http.dart' as http;
+
+final TextEditingController firstnameController = TextEditingController();
+final TextEditingController secondnameController = TextEditingController();
+final TextEditingController emailController = TextEditingController();
+final TextEditingController passwordController = TextEditingController();
 
 class RegistrationScreen extends GetView {
   const RegistrationScreen({super.key});
 
   @override
   Widget build(context) {
-    final TextEditingController firstnameController = TextEditingController();
-    final TextEditingController secondnameController = TextEditingController();
-    final TextEditingController emailController = TextEditingController();
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController enterpasswordController =
-        TextEditingController();
     return Material(
       child: Scaffold(
         body: BackGround(
@@ -55,6 +56,7 @@ class RegistrationScreen extends GetView {
                   child: CustomTextField(
                     controller: firstnameController,
                     hintMessage: "First Name",
+                    style: const TextStyle(color: appWhiteColor),
                   ),
                 ),
                 const SizedBox(
@@ -68,6 +70,7 @@ class RegistrationScreen extends GetView {
                   child: CustomTextField(
                     controller: secondnameController,
                     hintMessage: "Second Name",
+                    style: const TextStyle(color: appWhiteColor),
                   ),
                 ),
                 const SizedBox(
@@ -81,6 +84,7 @@ class RegistrationScreen extends GetView {
                   child: CustomTextField(
                     controller: emailController,
                     hintMessage: "Email",
+                    style: const TextStyle(color: appWhiteColor),
                   ),
                 ),
                 const SizedBox(
@@ -96,6 +100,7 @@ class RegistrationScreen extends GetView {
                     hintMessage: "Enter password",
                     hideText: true,
                     isPassword: true,
+                    style: const TextStyle(color: appWhiteColor),
                   ),
                 ),
                 const SizedBox(
@@ -106,12 +111,6 @@ class RegistrationScreen extends GetView {
                     color: Colors.white.withOpacity(0.5),
                     borderRadius: BorderRadius.circular(16),
                   ),
-                  child: CustomTextField(
-                    controller: enterpasswordController,
-                    hintMessage: "re-enter password",
-                    hideText: true,
-                    isPassword: true,
-                  ),
                 ),
                 const SizedBox(
                   height: 10.0,
@@ -119,7 +118,9 @@ class RegistrationScreen extends GetView {
                 CustomButton(
                   label: 'Create Account ',
                   buttonColor: primaryColor,
-                  action: () => Get.toNamed("/login"),
+                  action: () async {
+                    await serverSignup();
+                  },
                 )
               ],
             ),
@@ -127,5 +128,36 @@ class RegistrationScreen extends GetView {
         ),
       ),
     );
+  }
+
+  Future<void> serverSignup() async {
+    try {
+      http.Response response;
+      var body = {
+        "firstname": firstnameController.text.trim(),
+        "secondname": secondnameController.text.trim(),
+        "user_email": emailController.text.trim(),
+        "user_password": passwordController.text.trim(),
+      };
+
+      response = await http.post(
+        Uri.parse("https://nzembi.tech/mercy_cereal_shop/userTable/signup.php"),
+        headers: {"content-type": "application/x-www-form-urlencoded"},
+        body: body,
+      );
+
+      if (response.statusCode == 200) {
+        var serverResponse = json.decode(response.body);
+        int signedUp = serverResponse['success'];
+        if (signedUp == 1) {
+          print("ok");
+          await Get.toNamed("/login");
+          print("Account created successfully");
+        }
+      }
+      print(response.body);
+    } catch (e) {
+      debugPrint(e.toString());
+    }
   }
 }
