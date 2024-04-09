@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/constants.dart';
 
 class SettingItem extends StatelessWidget {
-  final String title;  
+  final String title;
   final IconData icon;
   final Color bgColor;
   final Color iconColor;
@@ -11,7 +11,7 @@ class SettingItem extends StatelessWidget {
 
   const SettingItem({
     super.key,
-    required this.title,    
+    required this.title,
     required this.icon,
     required this.bgColor,
     required this.iconColor,
@@ -38,9 +38,13 @@ class SettingItem extends StatelessWidget {
       child: ListTile(
         title: Text(
           title,
+          style: const TextStyle(color: appBlackColor, fontSize: 20),
         ),
-        subtitle: Text(value),
-        leading: Icon(icon, color: iconColor),
+        subtitle: Text(
+          value,
+          style: const TextStyle(color: appBlackColor, fontSize: 20),
+        ),
+        leading: Icon(icon, color: iconColor, size: 30),
         trailing: const Icon(Icons.arrow_forward, color: appBlackColor),
         tileColor: Colors.white,
         onTap: () {

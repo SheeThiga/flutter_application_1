@@ -18,7 +18,7 @@ class ProfileScreen extends StatelessWidget {
               backgroundImage: AssetImage('assets/images/profile.jpg'),
             ),
             const SizedBox(height: 20),
-            itemProfile('Name', 'Justus', Icons.person),
+            itemProfile('Name', 'Leo', Icons.person),
             const SizedBox(height: 10),
             itemProfile('Phone', '0114216034', Icons.phone),
             const SizedBox(height: 10),
@@ -52,7 +52,7 @@ class ProfileScreen extends StatelessWidget {
           borderRadius: BorderRadius.circular(10),
           boxShadow: [
             BoxShadow(
-                offset: Offset(0, 5),
+                offset: const Offset(0, 5),
                 color: primaryColor.withOpacity(.2),
                 spreadRadius: 2,
                 blurRadius: 10)
