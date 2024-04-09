@@ -37,6 +37,7 @@ dependencies:
   google_fonts: ^6.1.0
   get: ^4.6.6
   curved_navigation_bar: ^1.0.3
+  http: ^1.2.1
 
 dev_dependencies:
   flutter_test:
@@ -63,14 +64,6 @@ flutter:
   assets:
     - assets/images/grains.png
     - assets/images/profile.jpg
-    - assets/images/greenGrams.jpg
-    - assets/images/groundNuts.jpg
-    - assets/images/lentils.jpg
-    - assets/images/njahe.jpg
-    - assets/images/popcorn.jpg
-    - assets/images/rice.jpg
-    - assets/images/wairimu.jpg
-    - assets/images/yellowBeans.jpg
 
   #  - images/a_dot_ham.jpeg
 
