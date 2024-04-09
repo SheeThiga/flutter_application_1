@@ -1,14 +1,25 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/constants.dart';
+import 'package:flutter_application_1/controllers/dashboard_controller.dart';
+import 'package:flutter_application_1/models/product_model.dart';
 import 'package:flutter_application_1/views/widgets/custom_text.dart';
-import 'package:flutter_application_1/models/item_dashboard.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
+
+DashboardController productController = Get.put(DashboardController());
 
 class DashboardScreen extends StatelessWidget {
   const DashboardScreen({super.key});
 
   @override
   Widget build(context) {
+    productController.updateLoadingProductData(true);
+    getProducts().then((value) {
+      productController.updateProductList(value);
+      productController.updateLoadingProductData(false);
+    });
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(
@@ -22,7 +33,7 @@ class DashboardScreen extends StatelessWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: appBlackColor, size: 30.0),
         title: const CustomText(
-          label: 'Hi Justus!',
+          label: 'Hi Leo!',
           labelColor: appBlackColor,
           fontSize: 30.0,
         ),
@@ -107,86 +118,124 @@ class DashboardScreen extends StatelessWidget {
           const SizedBox(
             height: 30,
           ),
-          Expanded(
-            child: Container(
-              padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
-              decoration: const BoxDecoration(
-                color: appWhiteColor,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(50),
-                  topRight: Radius.circular(50),
+          Obx(
+            () => Expanded(
+              child: Container(
+                padding: const EdgeInsets.only(top: 20, left: 20, right: 20),
+                decoration: const BoxDecoration(
+                  color: appGreyColor,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(50),
+                    topRight: Radius.circular(50),
+                  ),
                 ),
-              ),
-              child: GridView.builder(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 15.0, vertical: 10.0),
-                shrinkWrap: true,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  crossAxisSpacing: 30.0,
-                  mainAxisSpacing: 10.0,
-                ),
-                itemCount: gridMap.length,
-                itemBuilder: (context, index) {
-                  return Card(
-                    color: appWhiteColor,
-                    elevation: 5,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20.0),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        gridMap[index]['title'],
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: appBlackColor,
-                              fontWeight: FontWeight.bold,
-                            ),
-                      ),
-                      subtitle: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text('Price: ${gridMap[index]['price']}'),
-                          Image.asset(
-                            gridMap[index]['image'],
-                            height: 50,
-                          ),
-                        ],
-                      ),
-                      onTap: () {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              title: Text(gridMap[index]['title']),
-                              content: Column(
-                                children: [
-                                  Image.asset(
-                                    gridMap[index]['image'],
-                                    height: 200,
-                                  ),
-                                  Text('Price: ${gridMap[index]['price']}'),
-                                ],
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text('Close'),
+                child: productController.loadingProductData.value
+                    ? const Center(child: Text('Loading'))
+                    : GridView.builder(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 15.0, vertical: 10.0),
+                        shrinkWrap: true,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 30.0,
+                          mainAxisSpacing: 10.0,
+                        ),
+                        itemCount: productController.productList.length,
+                        itemBuilder: (context, index) {
+                          return Obx(
+                            () => Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: appWhiteColor),
+                              child: ListTile(
+                                title: Text(
+                                  '${productController.productList[index]?.product_name}',
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        color: appBlackColor,
+                                        fontWeight: FontWeight.bold,
+                                      ),
                                 ),
-                              ],
-                            );
-                          },
-                        );
-                      },
-                    ),
-                  );
-                },
+                                subtitle: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                        '${productController.productList[index]?.price}'),
+                                    Image.network(
+                                      "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
+                                      height: 50,
+                                      width: 50,
+                                    )
+                                  ],
+                                ),
+                                onTap: () {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                        title: Text(productController
+                                            .productList[index]?.product_name),
+                                        content: Column(
+                                          children: [
+                                            Image.network(
+                                              "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
+                                            ),
+                                            Text(
+                                                'quantity_sold: ${productController.productList[index]?.quantity_sold}'),
+                                            Text(
+                                                'quantity_remaining: ${productController.productList[index]?.quantity_remaining}'),
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.pop(context);
+                                            },
+                                            child: const Text('Close'),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
               ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<List<ProductModel>> getProducts() async {
+    try {
+      http.Response response = await http.get(Uri.parse(
+          'https://nzembi.tech/mercy_cereal_shop/productTable/getProducts.php'));
+
+      if (response.statusCode == 200) {
+        var serverResponse = json.decode(response.body);
+        List<Map<String, dynamic>> productResponse =
+            serverResponse['products'].cast<Map<String, dynamic>>();
+
+        // Removed the unnecessary cast
+        List<ProductModel> productList = productResponse.map((products) {
+          return ProductModel.fromJson(products);
+        }).toList();
+
+        return productList;
+      }
+
+      throw Exception("Failed to load products");
+    } catch (e) {
+      debugPrint(e.toString());
+      return [];
+    }
   }
 }
