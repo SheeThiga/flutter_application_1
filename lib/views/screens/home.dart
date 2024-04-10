@@ -2,16 +2,16 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/constants.dart';
 import 'package:flutter_application_1/controllers/home_controller.dart';
-import 'package:flutter_application_1/views/calculator.dart';
 import 'package:flutter_application_1/views/screens/dashboard_screen.dart';
 import 'package:flutter_application_1/views/screens/profile.dart';
+import 'package:flutter_application_1/views/screens/sales_screen.dart';
 import 'package:flutter_application_1/views/screens/settings.dart';
 import 'package:get/get.dart';
 
 HomeController homeController = Get.put(HomeController());
 var screens = [
   const DashboardScreen(),
-  const Calculator(),
+ SalesScreen(),
   const ProfileScreen(),
   const SettingScreen(),
 ];
