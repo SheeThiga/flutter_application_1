@@ -39,8 +39,36 @@ class DashboardScreen extends StatelessWidget {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: const Text("Notifications"),
+                    content: const Text("No notifications!",
+                        style: TextStyle(color: Colors.red)),
+                    actions: [
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                        child: const Text(
+                          'Close',
+                          style: TextStyle(color: Colors.green),
+                        ),
+                      ),
+                    ],
+                  );
+                },
+              );
+            },
             icon: const Icon(Icons.notifications),
+          ),
+          IconButton(
+            onPressed: () async {
+              await Get.offAllNamed('/login');
+            },
+            icon: const Icon(Icons.logout),
           ),
         ],
       ),
@@ -48,7 +76,7 @@ class DashboardScreen extends StatelessWidget {
         children: [
           const SizedBox(height: 15.0),
           Text(
-            'Sales: 50,000',
+            'Sales: 5,000',
             style: Theme.of(context).textTheme.headlineLarge?.copyWith(
                 color: appBlackColor,
                 fontWeight: FontWeight.bold,
@@ -64,7 +92,7 @@ class DashboardScreen extends StatelessWidget {
                 width: 5,
               ),
               Text(
-                'profits: 2,500',
+                'profits: 500/=',
                 style: Theme.of(context).textTheme.bodySmall?.copyWith(
                       color: appBlackColor,
                     ),
@@ -163,7 +191,7 @@ class DashboardScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        '${productController.productList[index]?.price}'),
+                                        'Price: ${productController.productList[index]?.price}/kg'),
                                     Image.network(
                                       "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
                                       height: 50,
@@ -183,10 +211,16 @@ class DashboardScreen extends StatelessWidget {
                                             Image.network(
                                               "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
                                             ),
+                                            const SizedBox(
+                                              height: 50,
+                                            ),
                                             Text(
-                                                'quantity_sold: ${productController.productList[index]?.quantity_sold}'),
+                                                'Quantity_sold: ${productController.productList[index]?.quantity_sold}kgs'),
+                                            const SizedBox(
+                                              height: 50,
+                                            ),
                                             Text(
-                                                'quantity_remaining: ${productController.productList[index]?.quantity_remaining}'),
+                                                'Quantity_remaining: ${productController.productList[index]?.quantity_remaining}kgs'),
                                           ],
                                         ),
                                         actions: [
@@ -194,7 +228,11 @@ class DashboardScreen extends StatelessWidget {
                                             onPressed: () {
                                               Navigator.pop(context);
                                             },
-                                            child: const Text('Close'),
+                                            child: const Text(
+                                              'Close',
+                                              style: TextStyle(
+                                                  color: Colors.green),
+                                            ),
                                           ),
                                         ],
                                       );
