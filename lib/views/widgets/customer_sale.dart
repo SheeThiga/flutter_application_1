@@ -7,6 +7,8 @@ class CustomerSale extends StatelessWidget {
   final Color bgColor;
   final Color iconColor;
   final String value;
+  final Function onPressed;
+  
 
   const CustomerSale({
     super.key,
@@ -15,7 +17,10 @@ class CustomerSale extends StatelessWidget {
     required this.bgColor,
     required this.iconColor,
     required this.value,
+    required this.onPressed,
+    
   });
+  
 
   @override
   Widget build(BuildContext context) {
@@ -42,7 +47,13 @@ class CustomerSale extends StatelessWidget {
           value,
           style: const TextStyle(color: appBlackColor, fontSize: 20),
         ),
-        trailing: const Icon(Icons.delete, color: Colors.red),
+        trailing: GestureDetector(
+          onTap: onPressed as void Function()?,
+          child: const Icon(
+            Icons.delete,
+            color: Colors.red,
+          ),
+        ),
         tileColor: Colors.white,
       ),
     );

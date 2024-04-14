@@ -26,22 +26,48 @@ class SalesController extends GetxController {
         if (data['success'] == 1) {
           print("Sale added successfully");
 
-          // Update salesDataList with the newly added sale
           salesDataList.add(CustomerSale(
             title: "Customer: $user_email",
             icon: Icons.delete,
             bgColor: Colors.lime,
             iconColor: Colors.red,
-            value: "Amount: $amount",
+            value: "Amount: Ksh $amount",
+            onPressed: () {
+              deleteCustomerSale(user_email);
+            },
           ));
         } else {
           print("Failed to add sale");
-          // Optionally, you can show an error message or handle the failure
         }
       }
     } catch (e) {
       print("Error: $e");
-      // Optionally, you can show an error message or handle the failure
+    }
+  }
+
+  Future<void> deleteCustomerSale(String user_email) async {
+    try {
+      http.Response response = await http.post(
+        Uri.parse(
+            "https://nzembi.tech/mercy_cereal_shop/ordersTable/deleteOrder.php?user_email=$user_email"),
+        body: {
+          "user_email": user_email,
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var data = json.decode(response.body);
+        if (data['success'] == 1) {
+          print("Sale deleted successfully");
+        } else {
+          print("Failed to delete sale");
+        }
+      }
+
+      salesDataList
+          .removeWhere((sale) => sale.title == "Customer: $user_email");
+    } catch (e) {
+      print("Error: $e");
     }
   }
 }

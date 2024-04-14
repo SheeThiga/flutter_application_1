@@ -20,6 +20,7 @@ class SalesScreen extends StatelessWidget {
           ),
         ),
         leadingWidth: 50,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -27,36 +28,6 @@ class SalesScreen extends StatelessWidget {
           child: Obx(() => Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const CustomerSale(
-                    title: "Customer: doe@gmail.com",
-                    icon: Icons.delete,
-                    bgColor: Colors.lime,
-                    iconColor: Colors.red,
-                    value: "Amount: 200",
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const CustomerSale(
-                    title: "Customer: maggy@gmail.com",
-                    icon: Icons.delete,
-                    bgColor: Colors.lime,
-                    iconColor: Colors.red,
-                    value: "Amount: 200",
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  const CustomerSale(
-                    title: "Customer: cherry@gmail.com",
-                    icon: Icons.delete,
-                    bgColor: Colors.lime,
-                    iconColor: Colors.red,
-                    value: "Amount: 200",
-                  ),
-                  const SizedBox(
-                    height: 20,
-                  ),
                   for (var saleData in salesController.salesDataList)
                     CustomerSale(
                       title: saleData.title,
@@ -64,6 +35,7 @@ class SalesScreen extends StatelessWidget {
                       bgColor: saleData.bgColor,
                       iconColor: saleData.iconColor,
                       value: saleData.value,
+                      onPressed: saleData.onPressed,
                     ),
                   const SizedBox(height: 20),
                 ],
@@ -124,6 +96,7 @@ class SalesScreen extends StatelessWidget {
                   productIdController.text,
                   amountController.text,
                 );
+
                 Navigator.of(context).pop();
               },
               child: const Text(
