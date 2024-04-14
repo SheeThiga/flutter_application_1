@@ -7,6 +7,7 @@ import 'package:flutter_application_1/models/product_model.dart';
 import 'package:flutter_application_1/views/widgets/custom_text.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 DashboardController productController = Get.put(DashboardController());
 
@@ -20,6 +21,13 @@ class DashboardScreen extends StatelessWidget {
       productController.updateProductList(value);
       productController.updateLoadingProductData(false);
     });
+
+    Future<String> _getUserFirstName() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      String? firstName = prefs.getString('firstname') ?? '';
+      return firstName;
+    }
+
     return Scaffold(
       backgroundColor: primaryColor,
       appBar: AppBar(
@@ -32,11 +40,28 @@ class DashboardScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: appBlackColor, size: 30.0),
-        title: const CustomText(
-          label: 'Hi Leo!',
-          labelColor: appBlackColor,
-          fontSize: 30.0,
+        // title: const CustomText(
+        //   label: 'Hi Leo!',
+        //   labelColor: appBlackColor,
+        //   fontSize: 30.0,
+        // ),
+        title: FutureBuilder<String>(
+          future: _getUserFirstName(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Text('Hi, Loading...');
+            } else if (snapshot.hasError) {
+              return const Text('Hi User!');
+            } else {
+              return CustomText(
+                label: 'Hi ${snapshot.data}!',
+                labelColor: appBlackColor,
+                fontSize: 30.0,
+              );
+            }
+          },
         ),
+
         actions: [
           IconButton(
             onPressed: () {

@@ -7,6 +7,7 @@ import 'package:flutter_application_1/views/widgets/custom_field.dart';
 import 'package:get/get.dart';
 import '../widgets/custom_text.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 final TextEditingController firstnameController = TextEditingController();
 final TextEditingController secondnameController = TextEditingController();
@@ -153,11 +154,23 @@ class RegistrationScreen extends GetView {
           print("ok");
           await Get.toNamed("/login");
           print("Account created successfully");
+
+          await _saveUserDataToSharedPreferences(
+              firstnameController.text.trim(), emailController.text.trim());
+        } else {
+          print("not ok");
         }
       }
       print(response.body);
     } catch (e) {
       debugPrint(e.toString());
     }
+  }
+
+  Future<void> _saveUserDataToSharedPreferences(
+      String firstname, String user_email) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('firstname', firstname);
+    await prefs.setString('user_email', user_email);
   }
 }
