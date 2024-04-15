@@ -20,6 +20,7 @@ class SettingScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back_outlined),
         ),
         leadingWidth: 50,
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -33,7 +34,9 @@ class SettingScreen extends StatelessWidget {
                 bgColor: Colors.orange.shade100,
                 iconColor: Colors.orange,
                 value: "English",
-                onTap: () {},
+                onTap: () {
+                  _showSnackbar(context, "Language");
+                },
               ),
               const SizedBox(height: 20),
               SettingItem(
@@ -42,7 +45,9 @@ class SettingScreen extends StatelessWidget {
                 bgColor: Colors.grey.shade100,
                 iconColor: Colors.grey,
                 value: "Off",
-                onTap: () {},
+                onTap: () {
+                  _showSnackbar(context, "Dark Mode");
+                },
               ),
               const SizedBox(height: 20),
               SettingItem(
@@ -51,7 +56,9 @@ class SettingScreen extends StatelessWidget {
                 bgColor: Colors.blue.shade100,
                 iconColor: Colors.blue,
                 value: "On",
-                onTap: () {},
+                onTap: () {
+                  _showSnackbar(context, "Notifications");
+                },
               ),
               const SizedBox(height: 20),
               SettingItem(
@@ -60,7 +67,9 @@ class SettingScreen extends StatelessWidget {
                 bgColor: Colors.green.shade100,
                 iconColor: Colors.green,
                 value: "Public",
-                onTap: () {},
+                onTap: () {
+                  _showSnackbar(context, "Privacy");
+                },
               ),
               const SizedBox(height: 20),
               SettingItem(
@@ -69,10 +78,28 @@ class SettingScreen extends StatelessWidget {
                 bgColor: Colors.red.shade100,
                 iconColor: Colors.red,
                 value: "more info",
-                onTap: () {},
+                onTap: () {
+                  _showSnackbar(context, "Help");
+                },
               ),
             ],
           ),
+        ),
+      ),
+    );
+  }
+
+  void _showSnackbar(BuildContext context, String title) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        backgroundColor: Colors.red,
+        content: Row(
+          children: [
+            const Icon(Icons.error_outline, color: Colors.white),
+            const SizedBox(width: 8),
+            Text("$title has not been implemented yet",
+                style: const TextStyle(color: Colors.white)),
+          ],
         ),
       ),
     );
