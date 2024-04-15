@@ -1,8 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/views/widgets/customer_sale.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/simple/get_controllers.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class SalesController extends GetxController {
@@ -25,7 +24,7 @@ class SalesController extends GetxController {
         var data = json.decode(response.body);
         if (data['success'] == 1) {
           print("Sale added successfully");
-
+          _showSuccessNotification();
           salesDataList.add(CustomerSale(
             title: "Customer: $user_email",
             icon: Icons.delete,
@@ -69,5 +68,25 @@ class SalesController extends GetxController {
     } catch (e) {
       print("Error: $e");
     }
+  }
+
+  void _showSuccessNotification() {
+    showDialog(
+      context: Get.overlayContext!,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Sale Added'),
+          content: const Text('Sale has been added successfully!'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
