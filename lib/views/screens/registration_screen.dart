@@ -122,6 +122,7 @@ class RegistrationScreen extends GetView {
                   action: () async {
                     await serverSignup();
                   },
+                  
                 )
               ],
             ),
@@ -152,11 +153,12 @@ class RegistrationScreen extends GetView {
         int signedUp = serverResponse['success'];
         if (signedUp == 1) {
           print("ok");
-          await Get.toNamed("/login");
+          await _saveUserDataToSharedPreferences(
+              firstnameController.text.trim());
+
           print("Account created successfully");
 
-          await _saveUserDataToSharedPreferences(
-              firstnameController.text.trim(), emailController.text.trim());
+          await Get.toNamed("/login");
         } else {
           print("not ok");
         }
@@ -167,10 +169,14 @@ class RegistrationScreen extends GetView {
     }
   }
 
-  Future<void> _saveUserDataToSharedPreferences(
-      String firstname, String user_email) async {
+  Future<void> _saveUserDataToSharedPreferences(String firstname) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('firstname', firstname);
-    await prefs.setString('user_email', user_email);
+    final name = await prefs.setString('firstname', firstname);
+
+    if (name) {
+      print("Data saved successfully");
+    } else {
+      print("Data not saved");
+    }
   }
 }

@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/configs/constants.dart';
 import 'package:flutter_application_1/controllers/dashboard_controller.dart';
@@ -9,24 +8,32 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-DashboardController productController = Get.put(DashboardController());
+String firstName = '';
 
 class DashboardScreen extends StatelessWidget {
-  const DashboardScreen({super.key});
+  final DashboardController productController = Get.put(DashboardController());
+
+  DashboardScreen({super.key});
+
+  Future getFirstname() async {
+    try {
+      final SharedPreferences prefs = await SharedPreferences.getInstance();
+      var firstname = prefs.getString('firstname');
+      firstName = firstname!;
+    } catch (e) {
+      debugPrint(e.toString());
+    }
+  }
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
+    getFirstname().then((value) => print(firstName));
+
     productController.updateLoadingProductData(true);
     getProducts().then((value) {
       productController.updateProductList(value);
       productController.updateLoadingProductData(false);
     });
-
-    Future<String> _getUserFirstName() async {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      String? firstName = prefs.getString('firstname') ?? '';
-      return firstName;
-    }
 
     return Scaffold(
       backgroundColor: primaryColor,
@@ -40,28 +47,11 @@ class DashboardScreen extends StatelessWidget {
         backgroundColor: Colors.transparent,
         elevation: 0,
         iconTheme: const IconThemeData(color: appBlackColor, size: 30.0),
-        // title: const CustomText(
-        //   label: 'Hi Leo!',
-        //   labelColor: appBlackColor,
-        //   fontSize: 30.0,
-        // ),
-        title: FutureBuilder<String>(
-          future: _getUserFirstName(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Text('Hi, Loading...');
-            } else if (snapshot.hasError) {
-              return const Text('Hi User!');
-            } else {
-              return CustomText(
-                label: 'Hi ${snapshot.data}!',
-                labelColor: appBlackColor,
-                fontSize: 30.0,
-              );
-            }
-          },
+        title: CustomText(
+          label: 'Hi $firstName!',
+          labelColor: appBlackColor,
+          fontSize: 30.0,
         ),
-
         actions: [
           IconButton(
             onPressed: () {
@@ -141,7 +131,58 @@ class DashboardScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               ElevatedButton.icon(
-                onPressed: () {},
+                onPressed: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return AlertDialog(
+                        title: const Text('Add Grain'),
+                        content: const Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Grain Name',
+                              ),
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Quantity sold',
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                            TextField(
+                              decoration: InputDecoration(
+                                labelText: 'Quantity Remaining',
+                              ),
+                              keyboardType: TextInputType.number,
+                            ),
+                          ],
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                            },
+                            child: const Text(
+                              'Cancel',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                          ElevatedButton(
+                            onPressed: () {
+                              addGrain(context);
+                            },
+                            child: const Text(
+                              'Update',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  );
+                },
                 icon: const Icon(Icons.add_box_outlined, color: appBlackColor),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: appWhiteColor,
@@ -152,7 +193,7 @@ class DashboardScreen extends StatelessWidget {
                 ),
                 label: const Text('Grains'),
               ),
-              const SizedBox(width: 20.0),
+              SizedBox(width: 20.0),
               ElevatedButton.icon(
                 onPressed: () => Get.toNamed("/calculator"),
                 icon:
@@ -196,75 +237,73 @@ class DashboardScreen extends StatelessWidget {
                         ),
                         itemCount: productController.productList.length,
                         itemBuilder: (context, index) {
-                          return Obx(
-                            () => Container(
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: appWhiteColor),
-                              child: ListTile(
-                                title: Text(
-                                  '${productController.productList[index]?.product_name}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyLarge
-                                      ?.copyWith(
-                                        color: appBlackColor,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        'Price: ${productController.productList[index]?.price}/kg'),
-                                    Image.network(
-                                      "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
-                                      height: 50,
-                                      width: 50,
-                                    )
-                                  ],
-                                ),
-                                onTap: () {
-                                  showDialog(
-                                    context: context,
-                                    builder: (context) {
-                                      return AlertDialog(
-                                        title: Text(productController
-                                            .productList[index]?.product_name),
-                                        content: Column(
-                                          children: [
-                                            Image.network(
-                                              "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
-                                            ),
-                                            const SizedBox(
-                                              height: 50,
-                                            ),
-                                            Text(
-                                                'Quantity_sold: ${productController.productList[index]?.quantity_sold}kgs'),
-                                            const SizedBox(
-                                              height: 50,
-                                            ),
-                                            Text(
-                                                'Quantity_remaining: ${productController.productList[index]?.quantity_remaining}kgs'),
-                                          ],
-                                        ),
-                                        actions: [
-                                          TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: const Text(
-                                              'Close',
-                                              style: TextStyle(
-                                                  color: Colors.green),
-                                            ),
-                                          ),
-                                        ],
-                                      );
-                                    },
-                                  );
-                                },
+                          return Container(
+                            decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                                color: appWhiteColor),
+                            child: ListTile(
+                              title: Text(
+                                '${productController.productList[index]?.product_name}',
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      color: appBlackColor,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                               ),
+                              subtitle: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                      'Price: ${productController.productList[index]?.price}/kg'),
+                                  Image.network(
+                                    "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
+                                    height: 50,
+                                    width: 50,
+                                  )
+                                ],
+                              ),
+                              onTap: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(productController
+                                          .productList[index]?.product_name),
+                                      content: Column(
+                                        children: [
+                                          Image.network(
+                                            "https://nzembi.tech/mercy_cereal_shop/productTable/productImages/${productController.productList[index]?.product_image}",
+                                          ),
+                                          const SizedBox(
+                                            height: 50,
+                                          ),
+                                          Text(
+                                              'Quantity_sold: ${productController.productList[index]?.quantity_sold}kgs'),
+                                          const SizedBox(
+                                            height: 50,
+                                          ),
+                                          Text(
+                                              'Quantity_remaining: ${productController.productList[index]?.quantity_remaining}kgs'),
+                                        ],
+                                      ),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text(
+                                            'Close',
+                                            style:
+                                                TextStyle(color: Colors.green),
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
                             ),
                           );
                         },
@@ -287,7 +326,6 @@ class DashboardScreen extends StatelessWidget {
         List<Map<String, dynamic>> productResponse =
             serverResponse['products'].cast<Map<String, dynamic>>();
 
-        // Removed the unnecessary cast
         List<ProductModel> productList = productResponse.map((products) {
           return ProductModel.fromJson(products);
         }).toList();
@@ -300,5 +338,61 @@ class DashboardScreen extends StatelessWidget {
       debugPrint(e.toString());
       return [];
     }
+  }
+
+  Future<void> addGrain(BuildContext context) async {
+    String productName = '';
+    int quantitySold = 0;
+    int quantityRemaining = 0;
+
+    try {
+      http.Response response = await http.post(
+        Uri.parse(
+            "https://nzembi.tech/mercy_cereal_shop/productTable/updateProduct.php"),
+        body: {
+          "product_name": productName,
+          "quantity_sold": quantitySold.toString(),
+          "quantity_remaining": quantityRemaining.toString(),
+        },
+        headers: {
+          "content-type": "application/x-www-form-urlencoded",
+        },
+      );
+
+      if (response.statusCode == 200) {
+        var serverResponse = json.decode(response.body);
+        int updated = serverResponse['success'];
+        if (updated == 1) {
+          print("Product updated successfully");
+          _showUpdateSuccessDialog(context, productName);
+        } else {
+          print("Failed to update product");
+        }
+      } else {
+        print("Failed to update product: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error updating product: $e");
+    }
+  }
+
+  void _showUpdateSuccessDialog(BuildContext context, String productName) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Grain Updated'),
+          content: Text('$productName has been updated successfully.'),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 }
