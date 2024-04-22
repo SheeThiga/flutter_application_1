@@ -10,7 +10,7 @@ import 'package:get/get.dart';
 
 HomeController homeController = Get.put(HomeController());
 var screens = [
-  const DashboardScreen(),
+ DashboardScreen(),
   SalesScreen(),
   ProfileScreen(),
   const SettingScreen(),
